@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Top Up Diamond ML — Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#08040a;
+    --card:#0f0b16;
+    --muted:#a6adb8;
+    --accent1:#7c3aed;
+    --accent2:#4c1d95;
+    --glass: rgba(255,255,255,0.03);
+    --success:#25D366;
+    --green:#77e05a;
+    --yellow:#ffd54d;
+    --black-card: rgba(0,0,0,0.6);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
+    background:
+      radial-gradient(700px 400px at 10% 10%, rgba(124,58,237,0.10), transparent 10%),
+      radial-gradient(500px 350px at 90% 90%, rgba(76,29,149,0.06), transparent 8%),
+      var(--bg);
+    color:#eaf0ff;
+    padding:28px;
+  }
+
+  .container{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 380px;gap:28px}
+  @media (max-width:980px){ .container{grid-template-columns:1fr; padding:0 18px} }
+
+  header{display:flex;align-items:center;gap:16px;margin-bottom:8px}
+  .logo{
+    width:72px;height:72px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--accent1),var(--accent2));
+    box-shadow:0 12px 40px rgba(76,29,149,0.18);
+    font-weight:800;font-size:20px;color:white;
+  }
+  h1{margin:0;font-size:20px}
+  p.lead{margin:0;color:var(--muted);font-size:13px}
+
+  .panel{background:linear-gradient(180deg,var(--card), #0b0710);border-radius:14px;padding:18px;box-shadow:0 6px 30px rgba(2,2,5,0.6);border:1px solid rgba(255,255,255,0.03)}
+  .hero{display:flex;align-items:center;justify-content:space-between;padding:14px;border-radius:12px;margin-bottom:16px;background:linear-gradient(90deg, rgba(124,58,237,0.06), rgba(76,29,149,0.03));}
+  .badge{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:700;background:rgba(0,0,0,0.35);color:#fff;font-size:13px}
+  .muted{color:var(--muted);font-size:13px}
+
+  .packages{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:10px}
+  @media (max-width:560px){ .packages{grid-template-columns:repeat(1,1fr)} }
+
+  .pkg{
+    padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);
+    background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+    display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .pkg:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(76,29,149,0.08)}
+  .pkg .gem{width:46px;height:46px;background:linear-gradient(135deg,#66d7ff,#9bd6ff);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#033;box-shadow:0 6px 18px rgba(0,0,0,0.25)}
+  .details{flex:1;display:flex;flex-direction:column;gap:6px}
+  .title{font-weight:800;font-size:18px;color:#08c9fa}
+  .price{font-weight:800;font-size:15px;color:#f4f7f8}
+  .meta{font-size:12px;color:var(--muted)}
+
+  .label-green{display:inline-block;padding:6px 10px;border-radius:10px;background:linear-gradient(90deg,#8ae07a,#4ec24a);color:#063; font-weight:800}
+  .label-yellow{display:inline-block;padding:6px 10px;border-radius:10px;background:linear-gradient(90deg,#ffe082,#ffd54d);color:#111111; font-weight:800}
+
+  .actions{display:flex;gap:8px}
+  .btn{padding:10px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
+  .btn.primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;box-shadow:0 12px 30px rgba(124,58,237,0.14)}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+
+  aside .title{font-weight:700;margin-bottom:8px}
+  .cart-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+  .cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:var(--glass)}
+  .total{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:linear-gradient(90deg, rgba(124,58,237,0.05), rgba(76,29,149,0.03));font-weight:800;margin-top:8px}
+
+  .input, .select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+  .small{font-size:13px;color:var(--muted)}
+  .footer-note{font-size:12px;color:var(--muted);margin-top:8px}
+
+  /* ORDER CONFIRM MODAL */
+  .modal {
+    position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);
+    z-index:60;opacity:0;pointer-events:none;transition:opacity .18s ease;
+  }
+  .modal.show{opacity:1;pointer-events:auto}
+  .modal-card{width:420px;max-width:94%;background:linear-gradient(180deg,#0e0b14,#07040a);padding:18px;border-radius:12px;text-align:left;border:1px solid rgba(255,255,255,0.04);color:#eef2ff}
+  .modal-card h3{margin:0 0 8px 0}
+  .order-line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03)}
+  .order-meta{color:var(--muted);font-size:13px;margin-top:6px}
+
+  .flex{display:flex;gap:8px}
+  .right{margin-left:auto}
+  .center{display:flex;align-items:center;gap:8px}
+
+  /* small badge */
+  .best-badge{position:absolute;transform:rotate(-18deg);padding:6px 8px;background:#ff3b5c;color:white;font-weight:800;border-radius:6px;font-size:12px;left:-6px;top:-6px}
+
+  /* subtle animations */
+  .fade-in { animation: fadeIn .36s ease both }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(6px) } to { opacity:1; transform: translateY(0) } }
+
+  footer.note { text-align:center; color:var(--muted); margin-top:18px; font-size:13px }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <main>
+    <header>
+      <div class="logo">ML</div>
+      <div>
+        <h1>Top Up Diamond Mobile Legends — wagyuu store</h1>
+        <p class="lead muted">all payment melalui qris • Checkout via WhatsApp • Paket sesuai list</p>
+      </div>
+    </header>
+
+    <section class="panel">
+      <div class="hero">
+        <div>
+          <div class="badge">Premium • Respon Cepat</div>
+          <div style="margin-top:8px;font-weight:800;font-size:18px">Pilih Paket Mobile Legends</div>
+          <div class="muted" style="margin-top:6px">Label hijau hanya bisa dibeli <strong>1x</strong> per akun (stok terbatas).</div>
+        </div>
+        <div style="text-align:right">
+          <div class="muted">Seller WA</div>
+          <div style="font-weight:800">+62 838 3424 6509</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:14px">
+        <label class="small">Cari paket</label>
+        <input id="searchPkg" class="input" placeholder="Cari: 100 / 300 / 10 / 240" style="margin-top:6px">
+      </div>
+
+      <div class="packages" id="packagesGrid" aria-live="polite"></div>
+
+      <div style="margin-top:16px;font-size:13px;color:var(--muted)">
+        <span class="label-green" style="margin-right:8px">Label Hijau</span> hanya bisa dibeli 1x per akun. <br>
+        WDP = Weekly Diamond Pass.
+      </div>
+    </section>
+  </main>
+
+  <aside>
+    <div class="panel">
+      <div class="title">Keranjang & Checkout</div>
+
+      <div class="cart-list" id="cartList">
+        <div class="muted">Tidak ada item — pilih paket di kiri.</div>
+      </div>
+
+      <div class="total">
+        <div>Total</div>
+        <div id="totalAmount">Rp0</div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label class="small">Nama Pemesan</label>
+        <input id="buyerName" class="input" placeholder="Nama">
+
+        <label class="small" style="margin-top:8px">No. HP / WhatsApp</label>
+        <input id="buyerPhone" class="input" placeholder="Contoh: 081234567890">
+
+        <label class="small" style="margin-top:8px">Game ID</label>
+        <input id="inGameId" class="input" placeholder="ID player (wajib)">
+
+        <label class="small" style="margin-top:8px">server</label>
+        <input id="note" class="input" placeholder="Server.">
+
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button id="openConfirm" class="btn primary" style="flex:1">Beli Sekarang — Konfirmasi</button>
+          <button id="clearCart" class="btn ghost" style="width:120px">Kosongkan</button>
+        </div>
+
+        <div class="footer-note">Setelah konfirmasi, kamu akan diarahkan ke WhatsApp untuk pembayaran & proses top up.</div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<footer class="note">© Top Up ML — Pastikan mengisi In-Game ID dengan benar</footer>
+
+<!-- ORDER CONFIRM MODAL -->
+<div id="orderModal" class="modal" aria-hidden="true">
+  <div class="modal-card fade-in" role="dialog" aria-modal="true" aria-labelledby="orderTitle">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <h3 id="orderTitle">Konfirmasi Pesanan</h3>
+      <button id="closeOrder" class="btn ghost">Tutup</button>
+    </div>
+
+    <div id="orderLines" style="margin-top:12px"></div>
+
+    <div class="order-line" style="border-bottom: none; margin-top:8px">
+      <div class="muted">TOTAL</div>
+      <div id="orderTotal" style="font-weight:800"></div>
+    </div>
+
+    <div class="order-meta" id="orderMeta"></div>
+
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button id="confirmWa" class="btn primary" style="flex:1">Kirim ke WhatsApp & Checkout</button>
+      <button id="editCart" class="btn ghost" style="width:120px">Edit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* CONFIG */
+const sellerNumber = "6283834246509"; // nomor WA seller (format internasional)
+const packages = [
+  // labelGreen true = hanya boleh dibeli 1x (diblokir setelah dibeli) 
+  { id: 'g1', amount: 100, price: 20000, label: 'green', singlePurchase: true },
+  { id: 'g2', amount: 300, price: 50000, label: 'green', singlePurchase: true },
+  { id: 'g3', amount: 500, price: 100000, label: 'green', singlePurchase: true },
+  { id: 'g4', amount: 1000, price: 250000, label: 'green', singlePurchase: true },
+
+  // yellow / normal packages
+  { id: 'y1', amount: 10, price: 5000, label: 'yellow' },
+  { id: 'y2', amount: 34, price: 10000, label: 'yellow' },
+  { id: 'y3', amount: 50, price: 15000, label: 'yellow' },
+  { id: 'y4', amount: 85, price: 25000, label: 'yellow' },
+  { id: 'y5', amount: 170, price: 45000, label: 'yellow' },
+  { id: 'y6', amount: 240, price: 65000, label: 'yellow' },
+  { id: 'y7', amount: 296, price: 80000, label: 'yellow' },
+  { id: 'y8', amount: 568, price: 145000, label: 'yellow' },
+  { id: 'w1', amount: 'WDP', price: 28000, label: 'yellow' } // Weekly Diamond Pass
+];
+
+let cart = [];
+
+/* Helpers */
+function formatIDR(n){
+  return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR'}).format(n);
+}
+function findPkg(id){ return packages.find(p => p.id === id); }
+
+/* Persistence for singlePurchase items:
+   store keys in localStorage like 'bought_g1' = '1' */
+function isBoughtBefore(pkgId){
+  return localStorage.getItem('bought_' + pkgId) === '1';
+}
+function markBought(pkgId){
+  localStorage.setItem('bought_' + pkgId, '1');
+}
+
+/* Render Packages */
+const grid = document.getElementById('packagesGrid');
+function renderPackages(filter = ''){
+  grid.innerHTML = '';
+  const q = String(filter||'').trim().toLowerCase();
+
+  const filtered = packages.filter(p => {
+    if(!q) return true;
+    return String(p.amount).toLowerCase().includes(q) || String(p.price).toLowerCase().includes(q);
+  });
+
+  filtered.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'pkg';
+    // gem icon + content
+    const gem = `<div class="gem">💎</div>`;
+    // left content
+    let labelHTML = '';
+    if(p.label === 'green') labelHTML = `<div class="label-green">BEST</div>`;
+    else labelHTML = `<div class="label-yellow">${p.amount === 'WDP' ? 'WDP' : ''}</div>`;
+
+    // determine availability of singlePurchase
+    const bought = p.singlePurchase && isBoughtBefore(p.id);
+    const disabled = bought ? 'disabled' : '';
+
+    card.innerHTML = `
+      <div style="position:relative;display:flex;align-items:center;gap:12px;width:100%">
+        ${gem}
+        <div class="details">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="title">${p.amount} ${p.amount === 'WDP' ? 'WDP' : 'DM'}</div>
+            ${p.label === 'green' ? '<div style="margin-left:auto" class="label-green">Hanya 1x</div>' : ''}
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;justify-content:space-between">
+            <div class="meta">${p.amount === 'WDP' ? 'Weekly Diamond Pass' : 'Mobile Legends'}</div>
+            <div class="price">${p.price ? formatIDR(p.price) : '-'}</div>
+          </div>
+        </div>
+      </div>
+      <div class="actions" style="margin-left:auto">
+        <button class="btn primary btn-add" data-id="${p.id}" ${disabled}>Tambah</button>
+        <button class="btn ghost btn-buy" data-id="${p.id}" ${disabled}>Beli</button>
+      </div>
+    `;
+    // visually mark disabled cards
+    if(bought){
+      card.style.opacity = '0.5';
+      const note = document.createElement('div');
+      note.style.position = 'absolute';
+      note.style.right = '12px';
+      note.style.top = '8px';
+    }
+    grid.appendChild(card);
+  });
+
+  // bind buttons
+  document.querySelectorAll('.btn-add').forEach(b => b.addEventListener('click', e => {
+    addToCart(e.currentTarget.dataset.id);
+  }));
+  document.querySelectorAll('.btn-buy').forEach(b => b.addEventListener('click', e => {
+    buyNowSingle(e.currentTarget.dataset.id);
+  }));
+}
+
+/* Cart functions */
+const cartListEl = document.getElementById('cartList');
+const totalAmountEl = document.getElementById('totalAmount');
+
+function addToCart(pkgId){
+  const pkg = findPkg(pkgId);
+  if(!pkg) return alert('Paket tidak ditemukan');
+
+  // block singlePurchase if already bought before (persisted)
+  if(pkg.singlePurchase && isBoughtBefore(pkg.id)){
+    return alert('Paket ini hanya bisa dibeli 1x dan sudah pernah dibeli pada akun ini.');
+  }
+
+  // If the package is singlePurchase, ensure only one can be in cart
+  if(pkg.singlePurchase){
+    const alreadyInCart = cart.some(c => c.pkgId === pkgId);
+    if(alreadyInCart) return alert('Paket ini hanya bisa dibeli 1x per akun. Sudah ada di keranjang.');
+  }
+
+  // add or increase
+  const exist = cart.find(c => c.pkgId === pkgId);
+  if(exist) exist.qty += 1;
+  else cart.push({ pkgId: pkg.id, amount: pkg.amount, price: pkg.price, qty: 1, single: !!pkg.singlePurchase });
+
+  renderCart();
+  // re-render packages to disable Add on singlePurchase items
+  renderPackages(document.getElementById('searchPkg').value);
+}
+
+function renderCart(){
+  cartListEl.innerHTML = '';
+  if(cart.length === 0){
+    cartListEl.innerHTML = '<div class="muted">Tidak ada item — pilih paket di kiri.</div>';
+    totalAmountEl.textContent = formatIDR(0);
+    return;
+  }
+
+  cart.forEach((it, idx) => {
+    const el = document.createElement('div');
+    el.className = 'cart-item';
+    el.innerHTML = `
+      <div>
+        <div style="font-weight:700">${it.amount} ${it.amount === 'WDP' ? '' : 'DM'}</div>
+        <div class="small muted">x${it.qty}${it.single ? ' • (1x only)' : ''}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-weight:700">${formatIDR(it.price * it.qty)}</div>
+        <div style="margin-top:6px;display:flex;gap:6px;justify-content:flex-end">
+          <button class="btn ghost cart-act" data-idx="${idx}" data-act="dec">-</button>
+          <button class="btn ghost cart-act" data-idx="${idx}" data-act="inc">+</button>
+          <button class="btn ghost cart-act" data-idx="${idx}" data-act="rem">hapus</button>
+        </div>
+      </div>
+    `;
+    cartListEl.appendChild(el);
+  });
+
+  // bind cart actions
+  document.querySelectorAll('.cart-act').forEach(b => b.addEventListener('click', e => {
+    const idx = Number(e.currentTarget.dataset.idx);
+    const act = e.currentTarget.dataset.act;
+    if(act === 'inc'){
+      // don't allow increasing qty >1 on single purchase
+      if(cart[idx].single && cart[idx].qty >= 1){
+        alert('Paket ini hanya dapat dibeli 1 kali.');
+        return;
+      }
+      cart[idx].qty++;
+    }
+    if(act === 'dec'){ cart[idx].qty--; if(cart[idx].qty <= 0) cart.splice(idx,1); }
+    if(act === 'rem') cart.splice(idx,1);
+    renderCart();
+    renderPackages(document.getElementById('searchPkg').value);
+  }));
+
+  const total = cart.reduce((s,c) => s + (c.price * c.qty), 0);
+  totalAmountEl.textContent = formatIDR(total);
+}
+
+/* Quick buy single package */
+function buyNowSingle(pkgId){
+  const pkg = findPkg(pkgId);
+  cart = [];
+  cart.push({ pkgId: pkg.id, amount: pkg.amount, price: pkg.price, qty:1, single: !!pkg.singlePurchase });
+  renderCart();
+  document.getElementById('buyerName').focus();
+}
+
+/* Order modal & WhatsApp */
+const orderModal = document.getElementById('orderModal');
+const orderLines = document.getElementById('orderLines');
+const orderTotal = document.getElementById('orderTotal');
+const orderMeta = document.getElementById('orderMeta');
+
+function openOrderModal(){
+  if(cart.length === 0) return alert('Keranjang kosong — pilih paket dulu.');
+  const inGameId = document.getElementById('inGameId').value.trim();
+  if(!inGameId) return alert('Isi In-Game ID terlebih dahulu.');
+
+  // render lines
+  orderLines.innerHTML = '';
+  cart.forEach((c,i) => {
+    const line = document.createElement('div');
+    line.className = 'order-line';
+    line.innerHTML = `<div>${i+1}. ${c.amount} ${c.amount === 'WDP' ? '' : 'DM'} <div class="small muted">x${c.qty}</div></div>
+                      <div>${formatIDR(c.price * c.qty)}</div>`;
+    orderLines.appendChild(line);
+  });
+
+  const totalRp = cart.reduce((s,c) => s + (c.price * c.qty), 0);
+  orderTotal.textContent = formatIDR(totalRp);
+
+  // meta
+  const buyerName = document.getElementById('buyerName').value.trim();
+  const buyerPhone = document.getElementById('buyerPhone').value.trim();
+  const note = document.getElementById('note').value.trim();
+
+  orderMeta.innerHTML = `ID: <strong>${inGameId}</strong><br>`;
+  if(buyerName) orderMeta.innerHTML += `Nama: <strong>${buyerName}</strong> • `;
+  if(buyerPhone) orderMeta.innerHTML += `WA: <strong>${buyerPhone}</strong>`;
+  if(note) orderMeta.innerHTML += `<div style="margin-top:6px" class="muted">Catatan: ${note}</div>`;
+
+  orderModal.classList.add('show');
+}
+function closeOrderModal(){ orderModal.classList.remove('show'); }
+
+document.getElementById('openConfirm').addEventListener('click', openOrderModal);
+document.getElementById('closeOrder').addEventListener('click', closeOrderModal);
+document.getElementById('editCart').addEventListener('click', closeOrderModal);
+
+document.getElementById('confirmWa').addEventListener('click', ()=> {
+  const buyerName = document.getElementById('buyerName').value.trim();
+  const buyerPhone = document.getElementById('buyerPhone').value.trim();
+  const inGameId = document.getElementById('inGameId').value.trim();
+  const note = document.getElementById('note').value.trim();
+
+  // build message
+  const lines = [];
+  lines.push('Halo, saya mau melakukan TOP UP Mobile Legends:');
+  cart.forEach((c,i) => {
+    lines.push(`${i+1}. ${c.amount} ${c.amount === 'WDP' ? 'WDP' : 'DM'} • x${c.qty} • ${formatIDR(c.price * c.qty)}`);
+  });
+  const totalRp = cart.reduce((s,c) => s + (c.price * c.qty), 0);
+  lines.push('');
+  lines.push(`TOTAL: ${formatIDR(totalRp)}`);
+  lines.push(`In-Game ID: ${inGameId}`);
+  if(buyerName) lines.push(`Nama: ${buyerName}`);
+  if(buyerPhone) lines.push(`No HP: ${buyerPhone}`);
+  if(note) lines.push(`Catatan: ${note}`);
+  lines.push('');
+  lines.push('Mohon panduan pembayaran dan prosesnya. Terima kasih.');
+
+  const text = encodeURIComponent(lines.join('\n'));
+  window.open(`https://wa.me/${sellerNumber}?text=${text}`, '_blank');
+
+  // mark singlePurchase items as bought (persist) and disable them afterwards
+  cart.forEach(c => {
+    if(c.single){
+      markBought(c.pkgId);
+    }
+  });
+
+  // optional: clear cart after order
+  cart = []; renderCart();
+  renderPackages(document.getElementById('searchPkg').value);
+
+  closeOrderModal();
+});
+
+/* Misc controls */
+document.getElementById('clearCart').addEventListener('click', ()=> {
+  if(confirm('Kosongkan keranjang?')){ cart = []; renderCart(); renderPackages(document.getElementById('searchPkg').value); }
+});
+document.getElementById('searchPkg').addEventListener('input', e => renderPackages(e.target.value));
+
+/* init */
+renderPackages();
+renderCart();
+
+/* accessibility: close modal when click outside */
+orderModal.addEventListener('click', (e)=> { if(e.target === orderModal) closeOrderModal(); });
+
+</script>
+</body>
+</html>
